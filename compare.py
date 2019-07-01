@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from conv_num import * #for id number
 
 def ret_count(A, val):
   if val == 1:
@@ -43,16 +44,20 @@ for name in username:
 
 left = np.arange(len(username))
 width = 0.3
+username = conv_list(username)
 
 #g1=plt.bar(left,mental_sum,color='r',label='mental_sum',width=width,align='center')
 #g2=plt.bar(left+width, face_sum, color='b',label='face_sum', tick_label=username,width=width, align='center')
-g3=plt.bar(left+width*0, mental_up, color='g',label='mental_up', tick_label=username,width=width, align='center')
-g4=plt.bar(left+width*1, face_up, color='y',label='face_up', tick_label=username,width=width, align='center')
+g3=plt.bar(left+width*0, mental_up, color='blue',label='mental', tick_label=username,width=width, align='center')
+g4=plt.bar(left+width*1, face_up, color='red',label='face', tick_label=username,width=width, align='center')
 plt.legend(handles=[g3,g4],loc='best',shadow=True)
 plt.xlabel('user id')
-plt.ylabel('count of up/keep')
+plt.ylabel('average of mood')
+#plt.ylabel('count of up/keep')
 
-plt.show()
+#plt.savefig('compare_keep.eps')
+#plt.show()
+plt.savefig('compare_ave.eps')
 
 
 
