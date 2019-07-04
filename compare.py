@@ -59,6 +59,7 @@ def keep_count(username):
   return face_up, mental_up
 
 if __name__ == '__main__':
+
   face_up, mental_up = keep_count(username)
   face_sum, mental_sum= ave_count(username)
 

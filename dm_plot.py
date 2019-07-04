@@ -4,6 +4,7 @@ from matplotlib import pyplot
 from matplotlib.legend_handler import HandlerLine2D
 from matplotlib.patches import FancyArrowPatch
 
+from conv_num import * #for id number
 
 
 username = ['inusan', 'kumasan', 'kubosan','nekosan', 'sarada','test119', 'test120', 'test121', 'tomato', 'torisan', 'usagisan']
@@ -29,10 +30,11 @@ def arrow(name, dm, ans):
     half = (ans + mplus)/2.0
     corr=np.corrcoef(mdiff[:9],dm[:9])
 
-    print('dm',dm_nor)
+    #print('dm',dm_nor)
     print('ans',ans)
-    print('mplus',mplus)
-    print('dm_nor',dm_nor)
+    #print('mplus',mplus)
+    print('mdiff',mdiff)
+    print('dm',dm)
 
     print('corr',corr[1,0])
 
@@ -64,9 +66,11 @@ def arrow(name, dm, ans):
     ax.set_ylabel("intensity of mood")
 
     pyplot.title(name+'_'+str(round(corr[1,0],3)))
+    print(conv_num(name))
     pyplot.show()
 
 if __name__ == "__main__":
+    name_list = conv_list(username)
     predicted_dm = np.loadtxt("./data/phi_dM.csv",delimiter=",",skiprows=1)
     for name in username:
         m_ans = np.loadtxt("./jiken/"+name+"/kibun_after.csv",delimiter=",")
