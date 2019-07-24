@@ -52,10 +52,10 @@ for i_name in username:
     m_est = np.argmin(abs(err_array))
     m_pred[m_t] = m_est/100.0
 
-  print(m_pred)
-  print(m_ans)
+  print('m_pred',m_pred)
+  print('m_ans',m_ans)
   #test output
   outname = "./jiken/" + i_name + "/m_pred.csv"
-  np.savetxt(outname,m_pred)
+  #np.savetxt(outname,m_pred)
   lossname = "./jiken/" + i_name + "/nnloss_hist.csv"
-  np.savetxt(lossname,train.history['loss'])
+  #np.savetxt(lossname,train.history['loss'])
