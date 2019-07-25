@@ -8,6 +8,10 @@ import matplotlib.pyplot as plt
 nn_num = np.zeros((3,9))
 phi_num = np.zeros((3,9))
 
+nn_ave = np.zeros((3,9))
+phi_ave = np.zeros((3,9))
+
+
 
 for name_num in range(9):
   dir_name = "./jrm_test/" + str(name_num+1)
@@ -22,8 +26,12 @@ for name_num in range(9):
     phi_corr = np.loadtxt(dir_name + "/phi_corr-" + str(set_num) + ".csv", delimiter=",")
     phi_p = np.loadtxt(dir_name + "/phi_p-" + str(set_num) + ".csv")
 
-    #print(name_num,set_num,"---nn:",np.average(nn_corr[~np.isnan(nn_corr)]))
-    #print(name_num,set_num,"--phi:",np.average(phi_corr[~np.isnan(phi_corr)]))
+    print(name_num , "+", set_num)
+    print(name_num,set_num,"---nn:",np.average(nn_corr[~np.isnan(nn_corr)]))
+    print(name_num,set_num,"--phi:",np.average(phi_corr[~np.isnan(phi_corr)]))
+
+    nn_ave[set_num/10-1,name_num]= np.average(nn_corr[~np.isnan(nn_corr)])
+    phi_ave[set_num/10-1,name_num]= np.average(phi_corr[~np.isnan(phi_corr)])
 
     nn_num[set_num/10-1,name_num] = np.count_nonzero(nn_corr>0.2)
     print(set_num/10-1,name_num)
@@ -33,9 +41,8 @@ for name_num in range(9):
     print(np.count_nonzero(nn_corr>0),np.count_nonzero(phi_corr>0))
     print(np.count_nonzero(nn_corr>0.2),np.count_nonzero(phi_corr>0.2))
 
-    print('nn_p',np.where(nn_p<0.05))
-    print('phi_p',np.where(phi_p<0.05))
 
+    '''
     left = np.arange(10)
     width = 0.3
 
@@ -46,6 +53,48 @@ for name_num in range(9):
     plt.ylabel('correlation')
     plt.title("no."+str(name_num) +"-"+ str(set_num))
     plt.show()
+    '''
+
+'''
+pave = np.zeros(3)
+nave = np.zeros(3)
+
+for i in range(3):
+  val = phi_ave[i,:]
+  pave[i] = np.average(val[~np.isnan(val)])
+  val = nn_ave[i,:]
+  nave[i] = np.average(val[~np.isnan(val)])
+
+
+g1=plt.plot((10,20,30),pave,color='r',label='proposed method',marker='o',linestyle='dashdot')
+g2=plt.plot((10,20,30),nave,color='b',label='nn',marker='o',linestyle='dashed')
+plt.xlabel('number of training data',fontsize=15)
+plt.ylabel('average of correlation',fontsize=15)
+plt.legend()
+#plt.show()
+plt.savefig('ave_matome.eps')
+'''
+
+pcorr = np.zeros(3)
+ncorr = np.zeros(3)
+
+plt.figure(figsize=(4,8))
+
+for i in range(3):
+  val2 = phi_num[i,:]
+  pcorr[i] = np.sum(val2)
+  val2 = nn_num[i,:]
+  ncorr[i] = np.sum(val2)
+
+
+g1=plt.plot((10,20,30),pcorr,color='r',marker='o',label='proposed method',linestyle='dashdot')
+g2=plt.plot((10,20,30),ncorr,color='b',marker='o',label='nn',linestyle='dashed')
+plt.xlabel('number of training data',fontsize=15)
+plt.ylabel('number of correlation larger than 0.2',fontsize=15)
+
+plt.legend()
+#plt.savefig('corr_matome.eps')
+plt.show()
 
 '''
 for i in range(3):
@@ -57,16 +106,17 @@ for i in range(3):
   left = np.arange(9)
   width = 0.3
 
-  g1=plt.bar(left,phi_num[i,:],color='r',label='proposed method',width=width,align='center',tick_label=range(1,10))
-  g2=plt.bar(left+width, nn_num[i,:], color='none',edgecolor='b',hatch='//////////',label='neural network', width=width, align='center',tick_label=range(1,10))
+  g1=plt.bar(left,phi_ave[i,:],color='pink',label='proposed method',width=width,align='center',tick_label=range(1,10))
+  g2=plt.bar(left+width, nn_ave[i,:], color='none',edgecolor='skyblue',hatch='//////////',label='neural network', width=width, align='center',tick_label=range(1,10))
   plt.legend(handles=[g1,g2],loc='best',shadow=True,fontsize=10)
   plt.xlabel('user id',fontsize=12)
-  plt.ylabel('the number of correlation\n larger than 0.2',fontsize=12)
-  plt.ylim(0,7.3)
+  plt.ylabel('the average of correlation',fontsize=12)
+  #plt.ylabel('the number of correlation\n larger than 0.2',fontsize=12)
+  #plt.ylim(0,7.3)
   #plt.title(str((i+1)*10))
 
-#plt.ylabel('count of up/keep')
+  #plt.ylabel('count of up/keep')
 
-  plt.savefig(str(i)+'times_compare.eps')
-  #plt.show()
+  #plt.savefig(str(i)+'times_compare.eps')
+  plt.show()
 '''
