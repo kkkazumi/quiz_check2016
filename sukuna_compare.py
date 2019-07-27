@@ -30,35 +30,35 @@ for name_num in range(9):
     print(name_num,set_num,"---nn:",np.average(nn_corr[~np.isnan(nn_corr)]))
     print(name_num,set_num,"--phi:",np.average(phi_corr[~np.isnan(phi_corr)]))
 
-    nn_ave[set_num/10-1,name_num]= np.average(nn_corr[~np.isnan(nn_corr)])
-    phi_ave[set_num/10-1,name_num]= np.average(phi_corr[~np.isnan(phi_corr)])
+    nn_ave[set_num/10-1,name_num]= np.average(abs(nn_corr[~np.isnan(nn_corr)]))
+    phi_ave[set_num/10-1,name_num]= np.average(abs(phi_corr[~np.isnan(phi_corr)]))
 
-    nn_num[set_num/10-1,name_num] = np.count_nonzero(nn_corr>0.2)
+    nn_num[set_num/10-1,name_num] = np.count_nonzero(abs(nn_corr)>0.2)
+    phi_num[set_num/10-1,name_num] = np.count_nonzero(abs(phi_corr)>0.2)
     print(set_num/10-1,name_num)
     print(nn_num[set_num/10-1,name_num])
-    phi_num[set_num/10-1,name_num] = np.count_nonzero(phi_corr>0.2)
 
     print(np.count_nonzero(nn_corr>0),np.count_nonzero(phi_corr>0))
-    print(np.count_nonzero(nn_corr>0.2),np.count_nonzero(phi_corr>0.2))
 
+    vsjudge = 'count' + str(np.count_nonzero(abs(nn_corr)>0.2)) + "vs" + str(np.count_nonzero(abs(phi_corr)>0.2))
+    vsave = 'ave'+str(abs(nn_ave[set_num/10-1,name_num])) + "vs" + str(abs(phi_ave[set_num/10-1,name_num]))
 
-    '''
     left = np.arange(10)
     width = 0.3
 
-    g1=plt.bar(left,nn_corr,color='r',label='nn_corr',width=width,align='center')
-    g2=plt.bar(left+width, phi_corr, color='b',label='phi_corr', width=width, align='center')
+    g1=plt.bar(left,abs(nn_corr),color='b',label='nn_corr',width=width,align='center')
+    g2=plt.bar(left+width, abs(phi_corr), color='r',label='phi_corr', width=width, align='center')
     plt.legend(handles=[g1,g2],loc='best',shadow=True)
     plt.xlabel('set num')
     plt.ylabel('correlation')
-    plt.title("no."+str(name_num) +"-"+ str(set_num))
+    plt.ylim(0,1)
+    plt.title("no."+str(name_num) +"-"+ str(set_num)+"\n" + vsjudge+"\n" +vsave)
     plt.show()
-    '''
 
-'''
 pave = np.zeros(3)
 nave = np.zeros(3)
 
+plt.figure(figsize=(4,8))
 for i in range(3):
   val = phi_ave[i,:]
   pave[i] = np.average(val[~np.isnan(val)])
@@ -73,7 +73,6 @@ plt.ylabel('average of correlation',fontsize=15)
 plt.legend()
 #plt.show()
 plt.savefig('ave_matome.eps')
-'''
 
 pcorr = np.zeros(3)
 ncorr = np.zeros(3)
@@ -96,7 +95,6 @@ plt.legend()
 #plt.savefig('corr_matome.eps')
 plt.show()
 
-'''
 for i in range(3):
   print('nn_num',nn_num[i,:])
   print('phi_num',phi_num[i])
@@ -119,4 +117,3 @@ for i in range(3):
 
   #plt.savefig(str(i)+'times_compare.eps')
   plt.show()
-'''
