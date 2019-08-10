@@ -109,7 +109,6 @@ perr = np.zeros((2,len(set_list)))
 nave = np.zeros(len(set_list))
 nerr = np.zeros((2,len(set_list)))
 
-plt.figure(figsize=(4,8))
 
 for i in range(len(set_list)):
   val = phi_all[i,:,:]
@@ -123,6 +122,7 @@ for i in range(len(set_list)):
   nave[i] = iqr(val[~np.isnan(val)])
   #nerr[1,i] = abs(np.max(val[~np.isnan(val)])-nave[i])
   #nerr[0,i] = abs(nave[i]-np.min(val[~np.isnan(val)]))
+
   nerr[1,i] = abs(np.max(nn_ave[i,:])-nave[i])
   nerr[0,i] = abs(nave[i]-np.min(nn_ave[i,:]))
   print "val",val
@@ -131,50 +131,55 @@ for i in range(len(set_list)):
 
 columns = ['phi','nn']
 index = np.zeros((6,1))
-index[:,0] = np.linspace(0,5,6)
-phi_ways = np.ones((6,1))*99
-data_phi = np.hstack((index,phi_ways,phi_ave))
+index[:,0] = np.linspace(5,30,6,dtype='int')
+#phi_ways = np.ones((6,1))*99
 #data_phi = np.hstack((index,phi_ways,phi_ave))
 
+#nn_ways = np.ones((6,1))*88
+#data_nn = np.hstack((index,nn_ways,nn_ave))
 
-nn_ways = np.ones((6,1))*88
-data_nn = np.hstack((index,nn_ways,nn_ave))
+df_phi_in = pd.DataFrame(data=index,columns=["the number of supervisor data"],dtype='int')
+df_phi_way = pd.DataFrame({'way':['proposed method','proposed method','proposed method','proposed method','proposed method','proposed method']},columns=["way"],dtype='object',index=[0,1,2,3,4,5])
+df_phi_data = pd.DataFrame(data=phi_ave,columns=["0","1","2","3","4","5","6","7","8"],dtype='float',index=[0,1,2,3,4,5])
 
-df_phi = pd.DataFrame(data=data_phi,columns=["number","way","0","1","2","3","4","5","6","7","8"],dtype='float')
-df_nn = pd.DataFrame(data=data_nn,columns=["number","way","0","1","2","3","4","5","6","7","8"],dtype='float')
+df_phi = pd.concat([df_phi_in,df_phi_way,df_phi_data],axis=1)
+print df_phi
 
-phi_melt = pd.melt(df_phi, id_vars=['number','way'],var_name='hito')
-nn_melt = pd.melt(df_nn, id_vars=['number','way'],var_name='hito')
+df_phi_in = pd.DataFrame(data=index,columns=["the number of supervisor data"],dtype='int')
+df_nn_way = pd.DataFrame({'way':['neural network','neural network','neural network','neural network','neural network','neural network']},columns=["way"],dtype='object',index=[0,1,2,3,4,5])
+df_nn_data = pd.DataFrame(data=nn_ave,columns=["0","1","2","3","4","5","6","7","8"],dtype='float',index=[0,1,2,3,4,5])
 
-data = pd.concat([phi_melt,nn_melt])
-
-data['way']=data['way'].astype(str)
-
-data['way'].str.replace('99.0','phi')
-data['way'].str.replace('88.0','nn')
-
-print data['way']
-print data['way'].dtype
+df_nn = pd.concat([df_phi_in,df_nn_way,df_nn_data],axis=1)
+print df_nn
 
 
+phi_melt = pd.melt(df_phi, id_vars=['the number of supervisor data','way'],var_name='hito')
+nn_melt = pd.melt(df_nn, id_vars=['the number of supervisor data','way'],var_name='hito')
+
+data = pd.concat([nn_melt,phi_melt])
+data_new = data.rename(columns={'value':'correlation between estimated mood and self-assessed mood'})
+
+
+plt.figure(figsize=(8,6))
 #sns.violinplot(x='number',y='value',hue='way',data=data,split=True,inner="stick",scale_hue=False,bw=.5)
 #sns.swarmplot(x='number',y='value',hue='way',data=data,split=True)
 #sns.despine(offset=10,trim=True)
-sns.boxplot(x='number',y='value',hue='way',data=data)
+sns.set(style='whitegrid',palette='bright')
+sns.set_context(font_scale=10)
+sns_plot = sns.boxplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new)
+#sns_plot = sns.pointplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new,
+#  markers=['o','x'],linestyles=["-",'--'],capsize=.2,dodge=True,ci="sd")
+fig = sns_plot.get_figure()
+fig.savefig('data.eps')
 
 posi = np.linspace(0,6,6)
 posi2 = np.linspace(0,6,6) + np.ones(6)*0.5
 
-#g1 = plt.violinplot(phi_arr,posi,showmeans=True)
-#g2 = plt.violinplot(nn_arr,posi2,showmeans=True)
-#g1 = plt.boxplot(arr1)
-#g2 = plt.boxplot(arr2)
-
+plt.figure(figsize=(8,6))
 #box
 #g1=plt.errorbar(set_list,pave,yerr = 0.1)
-plt.figure(figsize=(4,8))
-g1=plt.plot(set_list,pave,color='r',label='phi',marker='o',linestyle='dashed')
-g2=plt.plot(set_list,nave,color='b',label='nn',marker='o',linestyle='dashed')
+g1=plt.plot(set_list,pave,color='darkorange',label='proposed method',marker='x',linestyle='dashed',linewidth=3,markeredgewidth=3,markersize=10)
+g2=plt.plot(set_list,nave,color='b',label='neural network',marker='o',linewidth=3,markersize=10)
 
 print('pave',pave)
 print('nave',nave)
@@ -182,8 +187,9 @@ print('nave',nave)
 #error bar
 #g1=plt.errorbar(set_list,pave,yerr = perr, color='r',label='proposed method',marker='o',elinewidth=1,linestyle='dashdot',capsize=4)
 #g2=plt.errorbar(set_list,nave,yerr=nerr,color='b',label='nn',marker='o',elinewidth=1,linestyle='dashed',capsize=4)
-plt.xlabel('number of training data',fontsize=15)
-plt.ylabel('var',fontsize=15)
+
+plt.xlabel('the number of training data',fontsize=15)
+plt.ylabel('interquartile range of correlation',fontsize=15)
 plt.legend()
 plt.show()
 #plt.savefig('ave_matome.eps')
@@ -191,22 +197,24 @@ plt.show()
 pcorr = np.zeros(len(set_list))
 ncorr = np.zeros(len(set_list))
 
-plt.figure(figsize=(4,8))
+fig
+
+#plt.figure(figsize=(4,8))
 
 for i in range(len(set_list)):
 
   phi_num[set_num/5-1,name_num] = np.count_nonzero((phi_corr)>0.2)
-  val2 = phi_num[i,:]
+  val2 = phi_ave[i,:]
   print "npcount",np.count_nonzero(val2[~np.isnan(val2)])
-  pcorr[i] = np.sum(val2)
+  pcorr[i] = np.average(val2[~np.isnan(val2)])
 
-  val2 = nn_num[i,:]
-  ncorr[i] = np.sum(val2)
+  val2 = nn_ave[i,:]
+  ncorr[i] = np.average(val2[~np.isnan(val2)])
 
 g1=plt.plot(set_list,pcorr,color='r',marker='o',label='proposed method',linestyle='dashdot')
 g2=plt.plot(set_list,ncorr,color='b',marker='o',label='nn',linestyle='dashed')
-plt.xlabel('number of training data',fontsize=15)
-plt.ylabel('number of correlation larger than 0.4(abs)',fontsize=15)
+plt.xlabel('the number of supervisor data',fontsize=15)
+plt.ylabel('average of correlation (positive)',fontsize=15)
 
 plt.legend()
 #plt.savefig('corr_matome.eps')
