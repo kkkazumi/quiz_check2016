@@ -166,11 +166,11 @@ plt.figure(figsize=(8,6))
 #sns.despine(offset=10,trim=True)
 sns.set(style='whitegrid',palette='bright')
 sns.set_context(font_scale=10)
-sns_plot = sns.boxplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new)
-#sns_plot = sns.pointplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new,
-#  markers=['o','x'],linestyles=["-",'--'],capsize=.2,dodge=True,ci="sd")
+#sns_plot = sns.boxplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new)
+sns_plot = sns.pointplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new,
+  markers=['o','x'],linestyles=["-",'--'],capsize=.2,dodge=True,ci="sd")
 fig = sns_plot.get_figure()
-fig.savefig('data.eps')
+fig.savefig('data_pointplot.eps')
 
 posi = np.linspace(0,6,6)
 posi2 = np.linspace(0,6,6) + np.ones(6)*0.5
