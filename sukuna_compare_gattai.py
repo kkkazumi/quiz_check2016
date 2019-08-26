@@ -13,7 +13,7 @@ test_len = 30
 
 hito_num = 9
 
-set_list = (5, 10, 15, 20, 25, 30)
+set_list = (5, 10, 15, 20, 25, 30,35,40)
 
 nn_num = np.zeros((len(set_list),hito_num))
 phi_num = np.zeros((len(set_list),hito_num))
@@ -32,7 +32,7 @@ sum_ave2 = 0
 sum_ave3 = 0
 
 for name_num in range(hito_num):
-  dir_name = "./jrm_test/" + str(name_num+1)
+  dir_name = "./jrm_test/4th_test/" + str(name_num+1)
   dir_name2 = "./jrm_test/third_test/" + str(name_num+1)
 
   for set_num in set_list:
@@ -166,9 +166,9 @@ plt.figure(figsize=(8,6))
 #sns.despine(offset=10,trim=True)
 sns.set(style='whitegrid',palette='bright')
 sns.set_context(font_scale=10)
-#sns_plot = sns.boxplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new)
-sns_plot = sns.pointplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new,
-  markers=['o','x'],linestyles=["-",'--'],capsize=.2,dodge=True,ci="sd")
+sns_plot = sns.boxplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new)
+#sns_plot = sns.pointplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new,
+#  markers=['o','x'],linestyles=["-",'--'],capsize=.2,dodge=True,ci="sd")
 fig = sns_plot.get_figure()
 fig.savefig('data_pointplot.eps')
 
