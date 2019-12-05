@@ -42,6 +42,8 @@ if __name__ == '__main__':
   fig = plt.figure()
   j=0
 
+  corr_out_all = np.zeros((len(name_list),30,SIT_NUM,EMO_NUM))
+  array=np.zeros((len(name_list),SIT_NUM))
   for i_name in name_list:
     #plt.subplot(3,4,j+1)
     corr_out = np.zeros((SIT_NUM,4))
@@ -57,15 +59,22 @@ if __name__ == '__main__':
       corr_out[:,2]=ang_w
       corr_out[:,3]=sad_w
 
-      sns.heatmap(abs(corr_out),cmap="seismic",norm=SqueezedNorm(vmin=-1, vmax=1, mid=0),cbar=False)
+      corr_out_all[j,num,:,:] = corr_out
+
+    """
+      sns.heatmap((corr_out),cmap="seismic",norm=SqueezedNorm(vmin=-1, vmax=1, mid=0),cbar=False)
       #plt.plot(range(10),hap_w)
       plt.xticks([0.5,1.5,2.5,3.5],xlabel)
-      j+=1
       plt.title(i_name)
       #print np.mean(abs(corr_out_all),axis=0)
       #print conv_num(i_name),float(np.count_nonzero(corr_out>0.5))/float(corr_out.size)
-      plt.pause(.1)
+      plt.pause(.001)
     plt.cla()
+    """
+    array[j,:]=np.mean(np.mean(abs(corr_out_all[j,:,:,:]),axis=0),axis=1)
+    print array[j,:]
+    j+=1
+  print"las", np.mean(array,axis=0)
 
 #np.savetxt("phi_corr_"+i_name+".csv",corr_out,delimiter=",")
 #output of phi function
