@@ -102,26 +102,29 @@ if __name__ == '__main__':
         corr_out[sit_num,emo_num]=corr[0,1]
 
     corr_out_all[j,:]=corr_out
-    sim = np.zeros((30,4))
+    sim = np.zeros((1,4))
 
-    for num in range(30):
-      plt.subplots_adjust(wspace=0.4,hspace=0.6)
-      hap_w= np.loadtxt("./jrm_test/5th_test/"+str(conv_num(i_name))+"/hap_weight40-"+str(num)+".csv",delimiter="\t")
-      sup_w= np.loadtxt("./jrm_test/5th_test/"+str(conv_num(i_name))+"/sup_weight40-"+str(num)+".csv",delimiter="\t")
-      ang_w= np.loadtxt("./jrm_test/5th_test/"+str(conv_num(i_name))+"/ang_weight40-"+str(num)+".csv",delimiter="\t")
-      sad_w= np.loadtxt("./jrm_test/5th_test/"+str(conv_num(i_name))+"/sad_weight40-"+str(num)+".csv",delimiter="\t")
+    num=0
 
-      weight_out[:,0]=hap_w
-      weight_out[:,1]=sup_w
-      weight_out[:,2]=ang_w
-      weight_out[:,3]=sad_w
+    plt.subplots_adjust(wspace=0.4,hspace=0.6)
+    hap_w= np.loadtxt("./jrm_test/"+str(conv_num(i_name))+"/hap_weight50-"+str(num)+".csv",delimiter="\t")
+    sup_w= np.loadtxt("./jrm_test/"+str(conv_num(i_name))+"/sup_weight50-"+str(num)+".csv",delimiter="\t")
+    ang_w= np.loadtxt("./jrm_test/"+str(conv_num(i_name))+"/ang_weight50-"+str(num)+".csv",delimiter="\t")
+    sad_w= np.loadtxt("./jrm_test/"+str(conv_num(i_name))+"/sad_weight50-"+str(num)+".csv",delimiter="\t")
+
+    weight_out[:,0]=hap_w
+    weight_out[:,1]=sup_w
+    weight_out[:,2]=ang_w
+    weight_out[:,3]=sad_w
 
 
-      for i in range(EMO_NUM):
-        #sim[num,i]=cos_sim(corr_out[:,i], weight_out[:,i])
-        sim[num,i]=np.corrcoef(corr_out[:,i], weight_out[:,i])[0,1]
+    for i in range(EMO_NUM):
+      #sim[num,i]=cos_sim(corr_out[:,i], weight_out[:,i])
+      sim[num,i]=np.corrcoef(corr_out[:,i], weight_out[:,i])[0,1]
+
+    print sim[0,0],",", sim[0,1],",", sim[0,2],",", sim[0,3]
     #print np.mean((sim),axis=0)
-    print np.count_nonzero(sim>0.1), sim.size
+    #print np.count_nonzero(sim>0.1), sim.size
 
 
     sns.heatmap(corr_out,cmap="seismic",norm=SqueezedNorm(vmin=-1, vmax=1, mid=0))

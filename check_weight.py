@@ -42,33 +42,34 @@ if __name__ == '__main__':
   fig = plt.figure()
   j=0
 
-  corr_out_all = np.zeros((len(name_list),30,SIT_NUM,EMO_NUM))
+  corr_out_all = np.zeros((len(name_list),1,SIT_NUM,EMO_NUM))
   array=np.zeros((len(name_list),SIT_NUM))
   for i_name in name_list:
     #plt.subplot(3,4,j+1)
     corr_out = np.zeros((SIT_NUM,4))
-    for num in range(30):
-      plt.subplots_adjust(wspace=0.4,hspace=0.6)
-      hap_w= np.loadtxt("./jrm_test/5th_test/"+str(conv_num(i_name))+"/hap_weight40-"+str(num)+".csv",delimiter="\t")
-      sup_w= np.loadtxt("./jrm_test/5th_test/"+str(conv_num(i_name))+"/sup_weight40-"+str(num)+".csv",delimiter="\t")
-      ang_w= np.loadtxt("./jrm_test/5th_test/"+str(conv_num(i_name))+"/ang_weight40-"+str(num)+".csv",delimiter="\t")
-      sad_w= np.loadtxt("./jrm_test/5th_test/"+str(conv_num(i_name))+"/sad_weight40-"+str(num)+".csv",delimiter="\t")
 
-      corr_out[:,0]=hap_w
-      corr_out[:,1]=sup_w
-      corr_out[:,2]=ang_w
-      corr_out[:,3]=sad_w
+    num = 0
+    plt.subplots_adjust(wspace=0.4,hspace=0.6)
+    hap_w= np.loadtxt("./jrm_test/"+str(conv_num(i_name))+"/hap_weight50-"+str(num)+".csv",delimiter="\t")
+    sup_w= np.loadtxt("./jrm_test/"+str(conv_num(i_name))+"/sup_weight50-"+str(num)+".csv",delimiter="\t")
+    ang_w= np.loadtxt("./jrm_test/"+str(conv_num(i_name))+"/ang_weight50-"+str(num)+".csv",delimiter="\t")
+    sad_w= np.loadtxt("./jrm_test/"+str(conv_num(i_name))+"/sad_weight50-"+str(num)+".csv",delimiter="\t")
 
-      corr_out_all[j,num,:,:] = corr_out
+    corr_out[:,0]=hap_w
+    corr_out[:,1]=sup_w
+    corr_out[:,2]=ang_w
+    corr_out[:,3]=sad_w
+
+    corr_out_all[j,num,:,:] = corr_out
 
     """
-      sns.heatmap((corr_out),cmap="seismic",norm=SqueezedNorm(vmin=-1, vmax=1, mid=0),cbar=False)
-      #plt.plot(range(10),hap_w)
-      plt.xticks([0.5,1.5,2.5,3.5],xlabel)
-      plt.title(i_name)
-      #print np.mean(abs(corr_out_all),axis=0)
-      #print conv_num(i_name),float(np.count_nonzero(corr_out>0.5))/float(corr_out.size)
-      plt.pause(.001)
+    sns.heatmap((corr_out),cmap="seismic",norm=SqueezedNorm(vmin=-1, vmax=1, mid=0),cbar=False)
+    #plt.plot(range(10),hap_w)
+    plt.xticks([0.5,1.5,2.5,3.5],xlabel)
+    plt.title(i_name)
+    #print np.mean(abs(corr_out_all),axis=0)
+    #print conv_num(i_name),float(np.count_nonzero(corr_out>0.5))/float(corr_out.size)
+    plt.pause(.001)
     plt.cla()
     """
     array[j,:]=np.mean(np.mean(abs(corr_out_all[j,:,:,:]),axis=0),axis=1)
