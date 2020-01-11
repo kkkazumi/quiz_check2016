@@ -51,49 +51,49 @@ for i_name in username:
 
   test_index = np.zeros(10,dtype='int')
 
-  #for set_num in (5,10,15,20,25,30):
-  set_num = 40
-  test_index0 = np.random.choice(range(0, NUM_MAX-10),30,replace=False) #the first index to start 30 test data sequence.
+  for set_num in (5,10,15,20,25,30,35,40):
+  #set_num = 35
+    test_index0 = np.random.choice(range(0, NUM_MAX-10),30,replace=False) #the first index to start 30 test data sequence.
 
-  for i in range(30):
-    test_index[0] = test_index0[i]
-    for t in range(1,10):
-      test_index[t] = test_index[t-1]+1
-    
-    numbers = np.linspace(0,49,50,dtype='int')
-    not_test_index = np.ones(len(numbers),dtype=bool)
-    not_test_index[test_index] = False
+    for i in range(30):
+      test_index[0] = test_index0[i]
+      for t in range(1,10):
+        test_index[t] = test_index[t-1]+1
+      
+      numbers = np.linspace(0,49,50,dtype='int')
+      not_test_index = np.ones(len(numbers),dtype=bool)
+      not_test_index[test_index] = False
 
-    last_index = numbers[not_test_index]
-    train_index = last_index[np.random.randint(0,NUM_MAX-10,set_num)]
+      last_index = numbers[not_test_index]
+      train_index = last_index[np.random.randint(0,NUM_MAX-10,set_num)]
 
-    print('test',test_index, 'train',train_index)
+      print('test',test_index, 'train',train_index)
 
-    ####################
+      ####################
 
-    factor_train= factor[train_index,:]
-    mood_train= mood[train_index]
-    face_train= face[train_index,:]
+      factor_train= factor[train_index,:]
+      mood_train= mood[train_index]
+      face_train= face[train_index,:]
 
-    factor_test= factor[test_index,:]
-    mood_test= mood[test_index]
-    face_test= face[test_index,:]
+      factor_test= factor[test_index,:]
+      mood_test= mood[test_index]
+      face_test= face[test_index,:]
 
-    save_factor_train = "/home/kazumi/prog/quiz_check2016/jrm_test/"+str(tag_number)+"/factor_train"+str(set_num) + "-" +str(i)+".csv"
-    save_mood_train = "/home/kazumi/prog/quiz_check2016/jrm_test/"+str(tag_number)+"/mood_train"+str(set_num) + "-" +str(i)+".csv"
-    save_face_train = "/home/kazumi/prog/quiz_check2016/jrm_test/"+str(tag_number)+"/face_train"+str(set_num) + "-" +str(i)+".csv"
-    np.savetxt(save_factor_train,factor_train,fmt='%.4f',delimiter=",")
-    np.savetxt(save_mood_train,mood_train,fmt='%.4f',delimiter=",")
-    np.savetxt(save_face_train,face_train,fmt='%.4f',delimiter=",")
+      save_factor_train = "/home/kazumi/prog/quiz_check2016/jrm_test/"+str(tag_number)+"/factor_train"+str(set_num) + "-" +str(i)+".csv"
+      save_mood_train = "/home/kazumi/prog/quiz_check2016/jrm_test/"+str(tag_number)+"/mood_train"+str(set_num) + "-" +str(i)+".csv"
+      save_face_train = "/home/kazumi/prog/quiz_check2016/jrm_test/"+str(tag_number)+"/face_train"+str(set_num) + "-" +str(i)+".csv"
+      np.savetxt(save_factor_train,factor_train,fmt='%.4f',delimiter=",")
+      np.savetxt(save_mood_train,mood_train,fmt='%.4f',delimiter=",")
+      np.savetxt(save_face_train,face_train,fmt='%.4f',delimiter=",")
 
-    save_factor_test = "/home/kazumi/prog/quiz_check2016/jrm_test/"+str(tag_number)+"/factor_test"+str(set_num) + "-" +str(i)+".csv"
-    save_mood_test = "/home/kazumi/prog/quiz_check2016/jrm_test/"+str(tag_number)+"/mood_test"+str(set_num) + "-" +str(i)+".csv"
-    save_face_test = "/home/kazumi/prog/quiz_check2016/jrm_test/"+str(tag_number)+"/face_test"+str(set_num) + "-" +str(i)+".csv"
-    np.savetxt(save_factor_test,factor_test,fmt='%.4f',delimiter=",")
-    np.savetxt(save_mood_test,mood_test,fmt='%.4f',delimiter=",")
-    np.savetxt(save_face_test,face_test,fmt='%.4f',delimiter=",")
+      save_factor_test = "/home/kazumi/prog/quiz_check2016/jrm_test/"+str(tag_number)+"/factor_test"+str(set_num) + "-" +str(i)+".csv"
+      save_mood_test = "/home/kazumi/prog/quiz_check2016/jrm_test/"+str(tag_number)+"/mood_test"+str(set_num) + "-" +str(i)+".csv"
+      save_face_test = "/home/kazumi/prog/quiz_check2016/jrm_test/"+str(tag_number)+"/face_test"+str(set_num) + "-" +str(i)+".csv"
+      np.savetxt(save_factor_test,factor_test,fmt='%.4f',delimiter=",")
+      np.savetxt(save_mood_test,mood_test,fmt='%.4f',delimiter=",")
+      np.savetxt(save_face_test,face_test,fmt='%.4f',delimiter=",")
 
-    selected_test = "/home/kazumi/prog/quiz_check2016/jrm_test/" +str(tag_number) + "/selected_num_test"+str(set_num) + "-"+ str(i) + ".csv"
-    selected_train = "/home/kazumi/prog/quiz_check2016/jrm_test/" +str(tag_number) + "/selected_num_train"+str(set_num) + "-"+ str(i) + ".csv"
-    np.savetxt(selected_test,test_index,fmt='%2d',delimiter=",") 
-    np.savetxt(selected_train,train_index,fmt='%2d',delimiter=",") 
+      selected_test = "/home/kazumi/prog/quiz_check2016/jrm_test/" +str(tag_number) + "/selected_num_test"+str(set_num) + "-"+ str(i) + ".csv"
+      selected_train = "/home/kazumi/prog/quiz_check2016/jrm_test/" +str(tag_number) + "/selected_num_train"+str(set_num) + "-"+ str(i) + ".csv"
+      np.savetxt(selected_test,test_index,fmt='%2d',delimiter=",") 
+      np.savetxt(selected_train,train_index,fmt='%2d',delimiter=",") 
