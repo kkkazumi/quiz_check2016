@@ -52,16 +52,9 @@ data2= data.rename(columns={'variable':'user id'})
 data_new = data2.rename(columns={'value':'absolute value of errors between self-assessed mood and estimated mood'})
 
 plt.figure(figsize=(8,6))
-#sns.violinplot(x='number',y='value',hue='way',data=data,split=True,inner="stick",scale_hue=False,bw=.5)
-#sns.swarmplot(x='number',y='value',hue='way',data=data,split=True)
-#sns.despine(offset=10,trim=True)
-#sns.palplot(sns.color_palette(flatui))
 sns.set_context(font_scale=10)
 sns_plot = sns.boxplot(x='user id',y='absolute value of errors between self-assessed mood and estimated mood',hue=graph_label,data=data_new)
-#sns_plot = sns.pointplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new,
-#  markers=['o','x'],linestyles=["-",'--'],capsize=.2,dodge=True,ci="sd")
 fig = sns_plot.get_figure()
-#fig.legend()
 
 plt.show()
 #fig.savefig('vsnn_box.eps')
