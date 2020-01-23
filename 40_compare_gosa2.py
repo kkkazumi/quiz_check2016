@@ -15,9 +15,6 @@ hito_num = 9
 
 set_list = (5, 10, 15, 20, 25, 30,35,40)
 
-#nn_num = np.zeros((len(set_list),hito_num))
-#phi_num = np.zeros((len(set_list),hito_num))
-
 nn_ave = np.zeros((len(set_list),hito_num))
 phi_ave = np.zeros((len(set_list),hito_num))
 
@@ -53,12 +50,8 @@ for name_num in range(hito_num):
 
 for i in range(len(set_list)):
   val = phi_all[i,:,:]
-  #pave[i] = np.var(val[~np.isnan(val)])
-  #pave[i] = iqr(val)
 
   val = nn_all[i,:,:]
-  #nave[i] = np.var(val[~np.isnan(val)])
-  #nave[i] = iqr(val)
 
 columns = ['phi','nn']
 index = np.zeros((len(set_list),1))
@@ -85,30 +78,8 @@ data_new = data.rename(columns={'value':'correlation between estimated mood and 
 
 
 plt.figure(figsize=(8,6))
-#sns.violinplot(x='number',y='value',hue='way',data=data,split=True,inner="stick",scale_hue=False,bw=.5)
-#sns.swarmplot(x='number',y='value',hue='way',data=data,split=True)
-#sns.despine(offset=10,trim=True)
 sns.set(style='whitegrid',palette='bright')
 sns.set_context(font_scale=10)
 sns_plot = sns.boxplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new)
-#sns_plot = sns.pointplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new,
-#  markers=['o','x'],linestyles=["-",'--'],capsize=.2,dodge=True,ci="sd")
 fig = sns_plot.get_figure()
-#fig.legend()
 plt.show()
-#fig.savefig('var_ave_box.eps')
-
-#plt.figure(figsize=(8,6))
-#box
-#g1=plt.errorbar(set_list,pave,yerr = 0.1)
-#g1=plt.plot(set_list,pave,color='darkorange',label='proposed method',marker='x',linestyle='dashed',linewidth=3,markeredgewidth=3,markersize=10)
-#g2=plt.plot(set_list,nave,color='b',label='neural network',marker='o',linewidth=3,markersize=10)
-
-#print('pave',pave)
-#print('nave',nave)
-
-#error bar
-
-#plt.xlabel('the number of training data',fontsize=15)
-#plt.ylabel('interquartile range of correlation',fontsize=15)
-#plt.legend()
