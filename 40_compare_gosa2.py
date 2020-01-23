@@ -74,13 +74,13 @@ phi_melt = pd.melt(df_phi, id_vars=['the number of supervisor data','way'],var_n
 nn_melt = pd.melt(df_nn, id_vars=['the number of supervisor data','way'],var_name='hito')
 
 data = pd.concat([nn_melt,phi_melt])
-data_new = data.rename(columns={'value':'correlation between estimated mood and self-assessed mood'})
+data_new = data.rename(columns={'value':'difference between estimated mood and self-assessed mood'})
 
 
 plt.figure(figsize=(8,6))
 sns.set(style='whitegrid',palette='bright')
 sns.set_context(font_scale=10)
-sns_plot = sns.boxplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new)
+sns_plot = sns.boxplot(x='the number of supervisor data',y='difference between estimated mood and self-assessed mood',hue='way',data=data_new)
 fig = sns_plot.get_figure()
 #plt.show()
 plt.savefig('5-40diff_matome.eps')
