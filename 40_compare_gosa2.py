@@ -76,11 +76,15 @@ nn_melt = pd.melt(df_nn, id_vars=['the number of supervisor data','way'],var_nam
 data = pd.concat([nn_melt,phi_melt])
 data_new = data.rename(columns={'value':'difference between estimated mood and self-assessed mood'})
 
-
 plt.figure(figsize=(8,6))
 sns.set(style='whitegrid',palette='bright')
 sns.set_context(font_scale=10)
-sns_plot = sns.boxplot(x='the number of supervisor data',y='difference between estimated mood and self-assessed mood',hue='way',data=data_new)
+#sns_plot = sns.barplot(x='the number of supervisor data',y='difference between estimated mood and self-assessed mood',hue='way',data=data_new,capsize=.2)
+#sns_plot = sns.boxplot(x='the number of supervisor data',y='difference between estimated mood and self-assessed mood',hue='way',data=data_new)
+sns_plot = sns.pointplot(x='the number of supervisor data',y='difference between estimated mood and self-assessed mood',hue='way',data=data_new,capsize=.2)
+
+#plt.ylim([0,0.3])
+
 fig = sns_plot.get_figure()
-#plt.show()
-plt.savefig('5-40diff_matome.eps')
+plt.show()
+#plt.savefig('5-40diff_matome.eps')
