@@ -22,23 +22,29 @@ for name_num in range(hito_num):
 
   set_num = 40
 
-  nn_corr = np.loadtxt(dir_name + "/nn_diff-" + str(set_num) + ".csv", delimiter=",")
-  phi_corr = np.loadtxt(dir_name + "/phi_diff-" + str(set_num) + ".csv", delimiter=",")
+  nn_corr = np.loadtxt(dir_name + "/nn_corr-" + str(set_num) + ".csv", delimiter=",")
+  phi_corr = np.loadtxt(dir_name + "/phi_corr-" + str(set_num) + ".csv", delimiter=",")
 
-  nn_all[:,name_num]= abs(nn_corr)
-  phi_all[:,name_num]= abs(phi_corr)
+  phi_corr[np.isnan(phi_corr)] = 0 
+  nn_corr[np.isnan(nn_corr)] = 0 
+
+  print("nn",nn_corr)
+  print("phi",phi_corr)
+
+  nn_all[:,name_num]= (nn_corr)
+  phi_all[:,name_num]= (phi_corr)
 
 columns = ['phi','nn']
-index = np.zeros((30,1))
-index[:,0] = np.linspace(0,29,30,dtype='int')
+index = np.zeros((int(test_len),1))
+index[:,0] = np.linspace(0,29,int(test_len),dtype='int')
 
 df_phi_in = pd.DataFrame(data=index,columns=["test no"],dtype='int')
-df_phi_way = pd.DataFrame({graph_label:"proposed method"},columns=[graph_label],dtype='object',index=np.linspace(0,29,30,dtype='int'))
+df_phi_way = pd.DataFrame({graph_label:"proposed method"},columns=[graph_label],dtype='object',index=np.linspace(0,29,int(test_len),dtype='int'))
 df_phi_data = pd.DataFrame(data=phi_all,dtype='float',columns=["1","2","3","4","5","6","7","8","9"])
 df_phi = pd.concat([df_phi_way,df_phi_data],axis=1)
 
 df_nn_in = pd.DataFrame(data=index,columns=["test no"],dtype='int')
-df_nn_way = pd.DataFrame({graph_label:"neural network"},columns=[graph_label],dtype='object',index=np.linspace(0,29,30,dtype='int'))
+df_nn_way = pd.DataFrame({graph_label:"neural network"},columns=[graph_label],dtype='object',index=np.linspace(0,29,int(test_len),dtype='int'))
 df_nn_data = pd.DataFrame(data=nn_all,dtype='float',columns=["1","2","3","4","5","6","7","8","9"])
 df_nn = pd.concat([df_nn_way,df_nn_data],axis=1)
 
@@ -53,7 +59,9 @@ data_new = data2.rename(columns={'value':'absolute value of errors between self-
 
 plt.figure(figsize=(8,6))
 sns.set_context(font_scale=10)
-sns_plot = sns.boxplot(x='user id',y='absolute value of errors between self-assessed mood and estimated mood',hue=graph_label,data=data_new)
+#sns_plot = sns.violinplot(x='user id',y='absolute value of errors between self-assessed mood and estimated mood',hue=graph_label,data=data_new)
+sns_plot = sns.barplot(x='user id',y='absolute value of errors between self-assessed mood and estimated mood',hue=graph_label,data=data_new,capsize=.2)
+#sns_plot = sns.boxplot(x='user id',y='absolute value of errors between self-assessed mood and estimated mood',hue=graph_label,data=data_new)
 fig = sns_plot.get_figure()
 
 plt.show()
