@@ -58,12 +58,6 @@ NNとPhiの推定性能を比較するため、
 * 40_compare_corr2.py
   - 教師データ個数を変えたときの相関を比較するグラフ
 
-
-
-
-
-
-
 * 40_plot.py
   - 基底関数による推定結果を１こずつ表示する
 
@@ -71,3 +65,5 @@ NNとPhiの推定性能を比較するため、
   - 基底関数の正しさ度合いCと重み係数Wの相関を各表情毎に出力
 
   - 関数の正しそうどは、/media/kazumi/4b35d6ed-76bb-41f1-9d5d-197a4ff1a6ab/home/kazumi/prog/est_pred/out_new.py
+
+  - 因子毎の重みの大きさは、/media/kazumi/4b35d6ed-76bb-41f1-9d5d-197a4ff1a6ab/home/kazumi/prog/quiz_anal/out_corr.py
