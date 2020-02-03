@@ -69,3 +69,5 @@ NNとPhiの推定性能を比較するため、
 
 * w_phiaqu_check.py
   - 基底関数の正しさ度合いCと重み係数Wの相関を各表情毎に出力
+
+  - 関数の正しそうどは、/media/kazumi/4b35d6ed-76bb-41f1-9d5d-197a4ff1a6ab/home/kazumi/prog/est_pred/out_new.py
