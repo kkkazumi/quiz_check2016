@@ -66,4 +66,24 @@ NNとPhiの推定性能を比較するため、
 
   - 関数の正しそうどは、/media/kazumi/4b35d6ed-76bb-41f1-9d5d-197a4ff1a6ab/home/kazumi/prog/est_pred/out_new.py
 
+    - out_kitekan_new.py という名前で、このディレクトリに追加。2020/06/09
+    - out_kitekan_all.py も追加。３０個全部のデータについて、基底関数の正しそうな度合いを出す。
+
   - 因子毎の重みの大きさは、/media/kazumi/4b35d6ed-76bb-41f1-9d5d-197a4ff1a6ab/home/kazumi/prog/quiz_anal/out_corr.py
+
+
+* good_data.py
+
+  - テストデータと訓練データがそれぞれ基底関数に合っているか算出し、書き出す。
+  - 推定したのが、テストデータの前半か、後半か、番号を調べる。
+  - 各因子との相関とかかな・・
+
+* kitekan_corr_est_corr.py
+
+  - 重みの正しさ度合いと推定結果との関係を調べる
+  - 重みの正しさ度合いは、基底関数の正しさと重みとの相関係数のこと。
+  - 基底関数の正しさは、各基底関数にFとM(実際に観測したFとアンケートM)を入力した値と、表情との相関係数のこと。
+* total_violin.py
+
+  - とりあえず全体の分布を見る。（２５回データの時）
+
