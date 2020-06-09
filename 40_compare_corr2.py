@@ -9,11 +9,11 @@ import seaborn as sns
 from scipy.stats import iqr
 
 
-test_len = 30
+test_len = 25
 
 hito_num = 9
 
-set_list = (5, 10, 15, 20, 25, 30,35,40)
+set_list = (5, 10, 15, 20, 25)
 
 nn_ave = np.zeros((len(set_list),hito_num))
 phi_ave = np.zeros((len(set_list),hito_num))
@@ -35,16 +35,21 @@ for name_num in range(hito_num):
     nn_corr = np.loadtxt(dir_name + "/nn_corr-" + str(set_num) + ".csv", delimiter=",")
     phi_corr = np.loadtxt(dir_name + "/phi_corr-" + str(set_num) + ".csv", delimiter=",")
 
-    #phi_corr[np.isinf(nn_corr)] = 0
-    #nn_corr[np.isnan(nn_corr)] = 0
+    phi_corr[np.isinf(nn_corr)] = 0
+    nn_corr[np.isnan(nn_corr)] = 0
 
     nn_all[set_num/5-1,name_num,:]= nn_corr
     phi_all[set_num/5-1,name_num,:]= phi_corr
 
+    #abs
+    #nn_ave[set_num/5-1,name_num]= np.average(abs(nn_corr))
+    #phi_ave[set_num/5-1,name_num]= np.average(abs(phi_corr))
+    #plus
     nn_ave[set_num/5-1,name_num]= np.average(nn_corr[nn_corr>0])
     phi_ave[set_num/5-1,name_num]= np.average(phi_corr[phi_corr>0])
 
-    left = np.arange(30)
+
+    left = np.arange(test_len)
     width = 0.3
 
 
@@ -55,13 +60,13 @@ for i in range(len(set_list)):
 
 columns = ['phi','nn']
 index = np.zeros((len(set_list),1))
-index[:,0] = np.linspace(5,40,len(set_list),dtype='int')
+index[:,0] = np.linspace(5,25,len(set_list),dtype='int')
 
 df_phi_in = pd.DataFrame(data=index,columns=["the number of supervisor data"],dtype='int')
-df_nn_way = pd.DataFrame({'way':['neural network','neural network','neural network','neural network','neural network','neural network','neural network','neural network']},columns=["way"],dtype='object',index=[0,1,2,3,4,5,6,7])
-df_phi_way = pd.DataFrame({'way':['proposed method','proposed method','proposed method','proposed method','proposed method','proposed method','proposed method','proposed method']},columns=["way"],dtype='object',index=[0,1,2,3,4,5,6,7])
-df_nn_data = pd.DataFrame(data=nn_ave,columns=["0","1","2","3","4","5","6","7","8"],dtype='float',index=[0,1,2,3,4,5,6,7])
-df_phi_data = pd.DataFrame(data=phi_ave,columns=["0","1","2","3","4","5","6","7","8"],dtype='float',index=[0,1,2,3,4,5,6,7])
+df_nn_way = pd.DataFrame({'way':['neural network','neural network','neural network','neural network','neural network']},columns=["way"],dtype='object',index=[0,1,2,3,4])
+df_phi_way = pd.DataFrame({'way':['proposed method','proposed method','proposed method','proposed method','proposed method']},columns=["way"],dtype='object',index=[0,1,2,3,4])
+df_nn_data = pd.DataFrame(data=nn_ave,columns=["0","1","2","3","4","5","6","7","8"],dtype='float',index=[0,1,2,3,4])
+df_phi_data = pd.DataFrame(data=phi_ave,columns=["0","1","2","3","4","5","6","7","8"],dtype='float',index=[0,1,2,3,4])
 
 df_nn = pd.concat([df_phi_in,df_nn_way,df_nn_data],axis=1)
 print "df_nn",df_nn
@@ -85,4 +90,4 @@ sns_plot = sns.pointplot(x='the number of supervisor data',y='correlation betwee
 
 fig = sns_plot.get_figure()
 plt.show()
-#plt.savefig('5-40diff_matome.eps')
+#plt.savefig('5-40diff_matome_abs.eps')
