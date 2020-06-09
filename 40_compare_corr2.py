@@ -8,6 +8,10 @@ import seaborn as sns
 
 from scipy.stats import iqr
 
+print("input abs or plus")
+flag = raw_input()
+
+
 
 test_len = 25
 
@@ -40,13 +44,27 @@ for name_num in range(hito_num):
 
     nn_all[set_num/5-1,name_num,:]= nn_corr
     phi_all[set_num/5-1,name_num,:]= phi_corr
+    print('nn',nn_corr[nn_corr>0].shape)
+    print('phi',phi_corr[phi_corr>0].shape)
 
-    #abs
-    #nn_ave[set_num/5-1,name_num]= np.average(abs(nn_corr))
-    #phi_ave[set_num/5-1,name_num]= np.average(abs(phi_corr))
-    #plus
-    nn_ave[set_num/5-1,name_num]= np.average(nn_corr[nn_corr>0])
-    phi_ave[set_num/5-1,name_num]= np.average(phi_corr[phi_corr>0])
+    if flag == "abs":
+      #abs
+      nn_ave[set_num/5-1,name_num]= np.average(abs(nn_corr))
+      phi_ave[set_num/5-1,name_num]= np.average(abs(phi_corr))
+      str_label = 'the average of the absolute value of the correlation \n between estimated mood and self-assessed mood'
+
+    elif flag == "plus":
+      #plus
+      nn_ave[set_num/5-1,name_num]= np.average(nn_corr[nn_corr>0])
+      phi_ave[set_num/5-1,name_num]= np.average(phi_corr[phi_corr>0])
+      str_label = 'the average of the positive correlation \n between estimated mood and self-assessed mood'
+
+    elif flag == "num":
+      #plus
+      nn_ave[set_num/5-1,name_num]= nn_corr[nn_corr>0].shape[0]
+      phi_ave[set_num/5-1,name_num]= phi_corr[phi_corr>0].shape[0]
+      str_label = 'the number of results in positive correlation'
+
 
 
     left = np.arange(test_len)
@@ -75,16 +93,19 @@ df_phi = pd.concat([df_phi_in,df_phi_way,df_phi_data],axis=1)
 print "df_phi",df_phi
 
 
+
 phi_melt = pd.melt(df_phi, id_vars=['the number of supervisor data','way'],var_name='hito')
 nn_melt = pd.melt(df_nn, id_vars=['the number of supervisor data','way'],var_name='hito')
 
 data = pd.concat([nn_melt,phi_melt])
-data_new = data.rename(columns={'value':'correlation between estimated mood and self-assessed mood'})
+data_new = data.rename(columns={'value':str_label})
+#data_new = data.rename(columns={'value':'correlation between estimated mood and self-assessed mood'})
 
 plt.figure(figsize=(8,6))
 sns.set(style='whitegrid',palette='bright')
 sns.set_context(font_scale=10)
-sns_plot = sns.pointplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new,capsize=.2)
+sns_plot = sns.pointplot(x='the number of supervisor data',y=str_label,hue='way',data=data_new,capsize=.2)
+#sns_plot = sns.pointplot(x='the number of supervisor data',y='correlation between estimated mood and self-assessed mood',hue='way',data=data_new,capsize=.2)
 
 #plt.ylim([0,0.3])
 
