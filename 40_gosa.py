@@ -2,51 +2,36 @@ import numpy as np
 import scipy as sp
 from scipy.stats import pearsonr
 
-#gosa version
+import matplotlib.pyplot as plt
 
-def norm(array,a_max,a_min):
-  return (array - np.ones_like(array)*a_min)/(a_max-a_min)
-  
-
-g = np.zeros(30)
+def min_max(trg_array,std_x, axis=None):
+  min = std_x.min(axis=axis, keepdims=True)
+  max = std_x.max(axis=axis, keepdims=True)
+  result = (trg_array-min)/(max-min)
+  print(trg_array.shape)
+  return result,1.0/(max-min)
 
 for name_num in range(9):
-  dir_name = "./jrm_test/4th_test/" + str(name_num+1)
-  for set_num in (5,10,15,20,25,30,35,40):
-    gosa = np.zeros(30)
-    for i in range(30):#calculate the avelage value of estimated accuracy for datum in this loop
-      print i
+  dir_name = "./jrm_test/" + str(name_num+1)
+  for set_num in (5,10,15,20,25):
+    #set_num = 35
+    diff = np.zeros(25)
+    rate = np.zeros(25)
+    for i in range(25):#calculate the avelage value of estimated accuracy for datum in this loop
       i_csv = str(set_num) + "-" + str(i) + ".csv"
 
-      mood_test = np.loadtxt(dir_name + "/mood_test" + i_csv ,delimiter=',')
-      mood_train= np.loadtxt(dir_name + "/mood_train" + i_csv ,delimiter=',')
+      mood_train_est = np.loadtxt(dir_name + "/TRAINestimated_phi" + i_csv, delimiter=',')
 
-      #mood_est = np.loadtxt(dir_name + "/estimated_dummy" + i_csv, delimiter=',')
-      mood_esta = np.loadtxt(dir_name + "/estimated_phi" + i_csv, delimiter=',')
-      mood_estb = np.loadtxt(dir_name + "/estimated_phi_before" + i_csv, delimiter=',')
+      mood_test_ans = np.loadtxt(dir_name + "/mood_test" + i_csv ,delimiter=',')
+      mood_est,rate[i] = min_max(np.loadtxt(dir_name + "/TESTestimated_phi" + i_csv, delimiter=','),mood_train_est)
 
-      mood_est = np.hstack((mood_esta,mood_estb))
-      mood_ans = np.hstack((mood_test,mood_train))
+      diff[i] = np.mean(mood_test_ans - mood_est)
+      print(diff[i],rate[i])
+      plt.plot(mood_test_ans,label="answer")
+      plt.plot(mood_est,label="estimated")
+      plt.legend()
+      plt.show()
 
-      m_max = np.max(mood_est)
-      m_min = np.min(mood_est)
 
-      ans_max = np.max(mood_ans)
-      ans_min = np.min(mood_ans)
-
-      mood_test = norm(mood_test,ans_max,ans_min)
-
-      mood_est_test = norm(mood_esta,m_max,m_min)
-      print mood_est_test
-      print mood_test
-
-      if np.sum(mood_est) == 0: 
-        g[i] =None
-      else:
-        g[i] = np.average(mood_est_test - mood_test)
-
-    #test output
-    #np.savetxt(dir_name+"/dummy_corr-"+str(set_num)+".csv",r,fmt='%.5f',delimiter=',')
-    ###np.savetxt(dir_name+"/phi_corr-"+str(set_num)+".csv",r,fmt='%.5f',delimiter=',')
-    np.savetxt(dir_name+"/phi_gosa-"+str(set_num)+".csv",g,fmt='%.5f',delimiter=',')
+    #np.savetxt(dir_name+"/phi_diff-"+str(set_num)+".csv",diff,fmt='%.5f',delimiter=',')
 
