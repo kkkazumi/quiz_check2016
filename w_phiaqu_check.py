@@ -11,8 +11,6 @@ SIT_NUM = 10
 USR_NUM = 9
 
 name_list = ["inusan","kumasan","nekosan","test119","test120","test121","tomato","torisan","usagisan"]
-#name_list = ["inusan","kubosan","kumasan","nekosan","test119","test120","test121","tomato","torisan","usagisan"]
-#name_list = ["inusan","kubosan","kumasan","nekosan","test119","test120","test121","tomato","torisan","usagisan","sarada"]
 
 xlabel = ["hap","sup","ang","sad"]
 class SqueezedNorm(matplotlib.colors.Normalize):
@@ -32,7 +30,7 @@ class SqueezedNorm(matplotlib.colors.Normalize):
 
 
 
-def cos_sim(v1, v2):
+def cos_srangeim(v1, v2):
     return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
 
 
@@ -73,65 +71,40 @@ if __name__ == '__main__':
 
   j=0
 
-  corr_out_all = np.zeros((len(name_list),SIT_NUM,4))
-  sim = np.zeros((USR_NUM,EMO_NUM))
+  set_num = 25
+  str_func = ["time of trial","rate of wins","encourage","symp","teasing","unrelated","no actions","total points","consecutive wins","consecutive losses"]
 
   for i_name in range(USR_NUM):
+    for test_num in range(25):
+      kitekan_correct = np.loadtxt('/home/kazumi/prog/quiz_check2016/jrm_test/'+str(i_name+1)+'/kitekan_correct'+str(set_num)+"-"+str(test_num)+'.csv',delimiter=",")
 
-    factor = np.loadtxt("/home/kazumi/prog/quiz_check2016/jrm_test/"+str(i_name+1)+"/factor_train50-0.csv",delimiter=",")
-    kibun = np.loadtxt("/home/kazumi/prog/quiz_check2016/jrm_test/"+str(i_name+1)+"/mood_train50-0.csv",delimiter=",")
-    signal = np.loadtxt("/home/kazumi/prog/quiz_check2016/jrm_test/"+str(i_name+1)+"/face_train50-0.csv",delimiter=",")
-
-    phi_out_arr = phi_out(factor,kibun)
-    corr_out = np.zeros((SIT_NUM,4))
-    weight_out = np.zeros((SIT_NUM,4))
-    
-    for sit_num in range(SIT_NUM):
-      #array = signal - phi_out[:,sit_num,:]
-      for emo_num in range(EMO_NUM):
-        corr = np.corrcoef(signal[:,emo_num],phi_out_arr[:,sit_num,emo_num])
-        corr_out[sit_num,emo_num]=corr[0,1]
-
-    corr_out_all[j,:]=corr_out
-
-    num=0
-
-    #for num in range(30):
-    plt.subplots_adjust(wspace=0.4,hspace=0.6)
-    hap_w= np.loadtxt("./jrm_test/"+str(i_name+1)+"/hap_weight50-"+str(num)+".csv",delimiter="\t")
-    sup_w= np.loadtxt("./jrm_test/"+str(i_name+1)+"/sup_weight50-"+str(num)+".csv",delimiter="\t")
-    ang_w= np.loadtxt("./jrm_test/"+str(i_name+1)+"/ang_weight50-"+str(num)+".csv",delimiter="\t")
-    sad_w= np.loadtxt("./jrm_test/"+str(i_name+1)+"/sad_weight50-"+str(num)+".csv",delimiter="\t")
-
-    weight_out[:,0]=hap_w
-    weight_out[:,1]=sup_w
-    weight_out[:,2]=ang_w
-    weight_out[:,3]=sad_w
+      #phi_out_arr = kitekan_correct
+      weight_out = np.zeros((SIT_NUM,4))
+      
+      #plt.subplots_adjust(wspace=0.4,hspace=0.6)
+      hap_w= np.loadtxt("./jrm_test/"+str(i_name+1)+"/hap_weight"+str(set_num)+"-"+str(test_num)+".csv",delimiter="\t")
+      sup_w= np.loadtxt("./jrm_test/"+str(i_name+1)+"/sup_weight"+str(set_num)+"-"+str(test_num)+".csv",delimiter="\t")
+      ang_w= np.loadtxt("./jrm_test/"+str(i_name+1)+"/ang_weight"+str(set_num)+"-"+str(test_num)+".csv",delimiter="\t")
+      sad_w= np.loadtxt("./jrm_test/"+str(i_name+1)+"/sad_weight"+str(set_num)+"-"+str(test_num)+".csv",delimiter="\t")
 
 
-    for i in range(EMO_NUM):
-      #sim[num,i]=cos_sim(corr_out[:,i], weight_out[:,i])
-      #corr_out[:,i]
-      #print("corr_out[:,",i,"]",corr_out[:,i])
-      #weight_out[:,i]
-      sim[i_name,i]=np.corrcoef(corr_out[:,i], weight_out[:,i])[0,1]
-    sim2 = np.corrcoef(corr_out.flatten(),weight_out.flatten())[0,1]
+      weight_out[:,0]=hap_w
+      weight_out[:,1]=sup_w
+      weight_out[:,2]=ang_w
+      weight_out[:,3]=sad_w
 
-
-    print i_name,sim2, ":",sim[i_name,0],",", sim[i_name,1],",", sim[i_name,2],",", sim[i_name,3]
-
-
-    ###sns.heatmap(corr_out,cmap="seismic",norm=SqueezedNorm(vmin=-1, vmax=1, mid=0))
-
-    j+=1
-
-  x = np.array(range(1,USR_NUM+1))
-  plt.bar(x-0.25,sim[:,0],color="pink",width=0.25,label="happy")
-  plt.bar(x,sim[:,1],color="orange",width=0.25,label="surprise")
-  plt.bar(x+0.25,sim[:,2],color="red",width=0.25,label="angry")
-  plt.bar(x+0.5,sim[:,3],color="blue",width=0.25,label="sad")
-  plt.legend()
-  plt.xlabel("usr id")
-  plt.ylabel("correlation between function accuracy C and weight W")
-  plt.savefig("weight_vs_acu.eps")
-  #plt.show()
+      print(str_func)
+      print(hap_w)
+      print(sup_w)
+      print(ang_w)
+      print(sad_w)
+      x=np.linspace(1,10,10)
+      plt.bar(x-0.25,hap_w,color="pink",width=0.25,label="happy")
+      plt.bar(x,sup_w,color="orange",width=0.25,label="surprise")
+      plt.bar(x+0.25,ang_w,color="red",width=0.25,label="angry")
+      plt.bar(x+0.5,sad_w,color="blue",width=0.25,label="sad")
+      #plt.legend()
+      #plt.xlabel("usr id")
+      #plt.ylabel("correlation between function accuracy C and weight W")
+      #plt.savefig("weight_vs_acu.eps")
+      plt.show()
