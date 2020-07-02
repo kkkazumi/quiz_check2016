@@ -15,11 +15,12 @@ EPOCH = 50000
 
 for name_num in (0,1,2,3,4,5,6,7,8):
   dir_name = "./jrm_test/" + str(name_num+1)
-  for set_num in (5,10,15,20,25,30,35,40):
+  #for set_num in (5,10,15,20,25,30,35,40):
+  for set_num in (25,26,27,28,29):
 
-    r = np.zeros(30)
-    p = np.zeros(30)
-    for i in range(30):#calculate the avelage value of estimated accuracy for datum in this loop
+    r = np.zeros(29)
+    p = np.zeros(29)
+    for i in range(29):#calculate the avelage value of estimated accuracy for datum in this loop
       i_csv = str(set_num) + "-" + str(i) + ".csv"
 
       #set input, output data to train
@@ -66,6 +67,11 @@ for name_num in (0,1,2,3,4,5,6,7,8):
       activation=study.best_params["activation"]
       optimizer=study.best_params["optimizer"]
 
+      best_params = ["mid_units:",str(mid_units),",activation:" ,activation,",optimizer:",optimizer]
+      path_w  = dir_name+"/nn_best_params"+str(set_num)+"-"+str(i)+".txt"
+      with open(path_w, mode='w') as f:
+          f.writelines(best_params)
+
       #define NN framework
       model = Sequential()
       model.add(Dense(mid_units, input_dim = INPUT_DIM, activation=activation))
@@ -76,34 +82,8 @@ for name_num in (0,1,2,3,4,5,6,7,8):
             metrics=["accuracy"])
 
       train=model.fit(x=x_train, y=y_train, nb_epoch=EPOCH)
+      model.save(dir_name+"/nn_model"+str(set_num)+"-"+str(i)+".h5")
 
-      #test to output
-      factor_test = np.loadtxt(dir_name + "/factor_test" + i_csv ,delimiter=',')
-      mood_test = np.loadtxt(dir_name + "/mood_test" + i_csv ,delimiter=',')
-      face_test = np.loadtxt(dir_name + "/face_test" + i_csv ,delimiter=',')
-
-      m_pred = np.zeros_like(mood_test)
-
-      #set data to test
-      for m_t in range(len(mood_test)):
-        x_tes = np.tile(factor_test[m_t],(100,1))
-        m_candidate = np.linspace(0,1,100)
-        y_ans = np.tile(face_test[m_t],(100,1))
-
-        xtest = np.hstack((x_tes,m_candidate.reshape(-1,1)))
-        ytest = model.predict(xtest)
-        err = ytest - y_ans
-        err_array = np.sum(err,1)
-        m_est = np.argmin(abs(err_array))
-        m_pred[m_t] = m_est/100.0
-
-      #pearson r
-      r[i], p[i] = pearsonr(mood_test, m_pred)
-
-      #test output
-      outname = dir_name + "/estimated_nn" + i_csv
-      np.savetxt(outname,m_pred,fmt="%.3f")
       lossname = dir_name + "/nn_loss" + i_csv
       np.savetxt(lossname,train.history['loss'])
-    np.savetxt(dir_name+"/nn_corr-"+str(set_num)+".csv",r,fmt='%.5f',delimiter=',')
-    np.savetxt(dir_name+"/nn_p-"+str(set_num)+".csv",p,fmt='%.5f',delimiter=',')
+
