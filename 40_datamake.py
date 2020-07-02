@@ -6,7 +6,7 @@ MID_UNIT = 15
 OUTPUT_DIM = 4
 EPOCH = 50000
 
-NUM_MAX = 50
+NUM_MAX = 30
 TEST_NUM = 30 #the number of test data is 10
 
 username = ['inusan', 'kumasan', 'nekosan', 'test119', 'test120', 'test121', 'tomato', 'torisan', 'usagisan']
@@ -49,25 +49,25 @@ for i_name in username:
   mood = np.hstack((mood_b,mood_a,mood_c))
   face = np.vstack((face_b,face_a,face_c))
 
-  test_index = np.zeros(10,dtype='int')
+  test_index = np.zeros(1,dtype='int')
 
-  for set_num in (5,10,15,20,25,30,35,40):
-  #set_num = 35
-    test_index0 = np.random.choice(range(0, NUM_MAX-10),30,replace=False) #the first index to start 30 test data sequence.
+  for set_num in (25,26,27,28,29):
+    test_index0 = np.random.choice(range(0, NUM_MAX-1),29,replace=False) #the first index to start 30 test data sequence.
 
-    for i in range(30):
+    for i in range(29):
       test_index[0] = test_index0[i]
-      for t in range(1,10):
-        test_index[t] = test_index[t-1]+1
+      #for t in range(1,5):
+      #test_index[t] = test_index[t-1]+1
       
-      numbers = np.linspace(0,49,50,dtype='int')
+      numbers = np.linspace(0,29,30,dtype='int')
       not_test_index = np.ones(len(numbers),dtype=bool)
       not_test_index[test_index] = False
 
       last_index = numbers[not_test_index]
-      train_index = last_index[np.random.randint(0,NUM_MAX-10,set_num)]
+      train_index = last_index[np.random.randint(0,NUM_MAX-5,set_num)]
 
       print('test',test_index, 'train',train_index)
+      #raw_input()
 
       ####################
 
