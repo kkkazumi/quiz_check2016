@@ -120,5 +120,5 @@ if __name__ == '__main__':
   #plt.ylabel('correlation of answered M vs face/predicted M',fontsize=f_size)
   plt.ylabel('correlation of answered M vs estimated M',fontsize=f_size)
 
-  #plt.show()
-  plt.savefig('correlation_new.eps')
+  plt.show()
+  #plt.savefig('correlation_new.eps')
