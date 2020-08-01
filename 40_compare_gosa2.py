@@ -31,8 +31,8 @@ for name_num in range(hito_num):
 
   for set_num in set_list:
 
-    nn_corr = np.loadtxt(dir_name + "/nn_diff-" + str(set_num) + ".csv", delimiter=",")
-    phi_corr = np.loadtxt(dir_name + "/phi_diff-" + str(set_num) + ".csv", delimiter=",")
+    nn_corr = np.loadtxt(dir_name + "/nn_DIFF-" + str(set_num) + ".csv", delimiter=",")
+    phi_corr = np.loadtxt(dir_name + "/phi_DIFF-" + str(set_num) + ".csv", delimiter=",")
     #nn_corr = np.loadtxt(dir_name + "/nn_diff-" + str(set_num) + ".csv", delimiter=",")
     #phi_corr = np.loadtxt(dir_name + "/phi_diff-" + str(set_num) + ".csv", delimiter=",")
 

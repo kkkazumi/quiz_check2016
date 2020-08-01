@@ -8,13 +8,13 @@ def norm(array,a_max,a_min):
   return (array - np.ones_like(array)*a_min)/(a_max-a_min)
   
 
-g = np.zeros(30)
+g = np.zeros(29)
 
 for name_num in range(9):
   dir_name = "./jrm_test/" + str(name_num+1)
-  for set_num in (5,10,15,20,25,30,35,40):
-    gosa = np.zeros(30)
-    for i in range(30):#calculate the avelage value of estimated accuracy for datum in this loop
+  for set_num in (25,26,27,28,29):
+    gosa = np.zeros(29)
+    for i in range(29):#calculate the avelage value of estimated accuracy for datum in this loop
       print i
       i_csv = str(set_num) + "-" + str(i) + ".csv"
 
@@ -26,7 +26,6 @@ for name_num in range(9):
       ans_min = np.min(mood_ans)
       mood_test = norm(mood_test,ans_max,ans_min)
 
-
       mood_est = np.loadtxt(dir_name + "/estimated_nn" + i_csv, delimiter=',')
 
       if np.sum(mood_est) == 0: 
@@ -34,8 +33,10 @@ for name_num in range(9):
       else:
         g[i] = np.average(mood_est- mood_test)
 
+    print('gosa',g)
     #test output
     #np.savetxt(dir_name+"/dummy_corr-"+str(set_num)+".csv",r,fmt='%.5f',delimiter=',')
     ###np.savetxt(dir_name+"/phi_corr-"+str(set_num)+".csv",r,fmt='%.5f',delimiter=',')
-    np.savetxt(dir_name+"/nn_diff-"+str(set_num)+".csv",g,fmt='%.5f',delimiter=',')
+
+    #np.savetxt(dir_name+"/nn_diff-"+str(set_num)+".csv",g,fmt='%.5f',delimiter=',')
 

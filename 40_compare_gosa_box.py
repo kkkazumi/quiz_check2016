@@ -57,5 +57,5 @@ sns_plot = sns.barplot(x='user id',y='absolute value of errors between self-asse
 #sns_plot = sns.boxplot(x='user id',y='absolute value of errors between self-assessed mood and estimated mood',hue=graph_label,data=data_new)
 fig = sns_plot.get_figure()
 
-plt.show()
-#fig.savefig('vsnn_box.eps')
+#plt.show()
+fig.savefig('vsnn_gosa.eps')

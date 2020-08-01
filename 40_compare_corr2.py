@@ -36,8 +36,11 @@ for name_num in range(hito_num):
 
   for set_num in set_list:
 
-    nn_corr = np.loadtxt(dir_name + "/nn_corr-" + str(set_num) + ".csv", delimiter=",")
-    phi_corr = np.loadtxt(dir_name + "/phi_corr-" + str(set_num) + ".csv", delimiter=",")
+    nn_corr = np.loadtxt(dir_name + "/nn_sign-" + str(set_num) + ".csv", delimiter=",")
+    phi_corr = np.loadtxt(dir_name + "/phi_sign-" + str(set_num) + ".csv", delimiter=",")
+    #nn_corr = np.loadtxt(dir_name + "/nn_corr-" + str(set_num) + ".csv", delimiter=",")
+    #phi_corr = np.loadtxt(dir_name + "/phi_corr-" + str(set_num) + ".csv", delimiter=",")
+
 
     phi_corr[np.isinf(nn_corr)] = 0
     nn_corr[np.isnan(nn_corr)] = 0

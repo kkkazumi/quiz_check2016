@@ -6,6 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from scipy.stats import iqr
 
 hito_num = 9
 
@@ -17,20 +18,47 @@ set_list = (40)
 nn_ave = np.zeros(hito_num)
 phi_ave = np.zeros(hito_num)
 
+nn_max= np.zeros(hito_num)
+phi_max = np.zeros(hito_num)
+
+nn_min= np.zeros(hito_num)
+phi_min = np.zeros(hito_num)
+
+
 for name_num in range(hito_num):
-  dir_name = "./jrm_test/" + str(name_num+1)
+  dir_name = "./jrm_test/5th_test/" + str(name_num+1)
 
   #for set_num in set_list:
   set_num = 40
 
-  nn_corr = np.loadtxt(dir_name + "/nn_corr-" + str(set_num) + ".csv", delimiter=",")
-  nn_p = np.loadtxt(dir_name + "/nn_p-" + str(set_num) + ".csv")
+  nn_corr = np.loadtxt(dir_name + "/nn_rimcorr-" + str(set_num) + ".csv", delimiter=",")
+  nn_p = np.loadtxt(dir_name + "/nn_rimp-" + str(set_num) + ".csv")
 
-  phi_corr = np.loadtxt(dir_name + "/phi_corr-" + str(set_num) + ".csv", delimiter=",")
-  phi_p = np.loadtxt(dir_name + "/phi_p-" + str(set_num) + ".csv")
+  phi_corr = np.loadtxt(dir_name + "/phi_rimcorr-" + str(set_num) + ".csv", delimiter=",")
+  phi_p = np.loadtxt(dir_name + "/phi_rimp-" + str(set_num) + ".csv")
 
-  nn_ave[name_num]= np.average(abs(nn_corr[~np.isnan(nn_corr)]))
+  #nn_corr = np.loadtxt(dir_name + "/nn_corr-" + str(set_num) + ".csv", delimiter=",")
+  #nn_p = np.loadtxt(dir_name + "/nn_p-" + str(set_num) + ".csv")
+
+  #phi_corr = np.loadtxt(dir_name + "/phi_corr-" + str(set_num) + ".csv", delimiter=",")
+  #phi_p = np.loadtxt(dir_name + "/phi_p-" + str(set_num) + ".csv")
+  
+  nn_corr[np.isnan(phi_corr)]=None
+
+  nn_ave[name_num]= np.average((nn_corr[~np.isnan(nn_corr)]))
+  phi_ave[name_num]= np.average((phi_corr[~np.isnan(phi_corr)]))
+
+  nn_ave[name_num]= np.average(abs(nn_corr[~np.isnan(phi_corr)]))
   phi_ave[name_num]= np.average(abs(phi_corr[~np.isnan(phi_corr)]))
+
+  nn_ave[name_num]= np.average((nn_corr[nn_corr>0]))
+  phi_ave[name_num]= np.average((phi_corr[phi_corr>0]))
+
+  nn_max[name_num]= np.max(abs(nn_corr[~np.isnan(nn_corr)]))
+  phi_max[name_num]= np.max(abs(phi_corr[~np.isnan(phi_corr)]))
+
+  nn_min[name_num]= np.min(abs(nn_corr[~np.isnan(nn_corr)]))
+  phi_min[name_num]= np.min(abs(phi_corr[~np.isnan(phi_corr)]))
 
   left = np.arange(30)
   width = 0.3
@@ -42,9 +70,19 @@ for name_num in range(hito_num):
   #plt.ylabel('correlation')
   #plt.ylim(0.2,1)
   #plt.title("no."+str(name_num) +"-"+ str(set_num)+"\n" + vsjudge+"\n" +vsave)
+  #plt.title("no."+str(name_num) +"-"+ str(max(phi_corr)))
   #plt.show()
 
+phi_err2=phi_max-phi_ave
+phi_err1=phi_ave - phi_min
 
+print phi_ave
+
+nn_err2=nn_max-nn_ave
+nn_err1=nn_ave - nn_min
+
+#err1=iqr(phi_ave)
+#err2=iqr(nn_ave)
 left = np.arange(9)
 width = 0.3
 
@@ -53,13 +91,17 @@ fsize=15
 plt.figure(figsize=(8,4.5))
 
 g1=plt.bar(left,phi_ave,color='r',label='proposed method',width=width,align='center',tick_label=range(1,10))
-g2=plt.bar(left+width, nn_ave, color='none',edgecolor='blue',hatch='///////',label='neural network', width=width, align='center',tick_label=range(1,10))
+#g2=plt.bar(left+width, nn_ave,capsize=5, color='none',edgecolor='blue',hatch='///////',label='neural network', width=width, align='center',tick_label=range(1,10))
+g2=plt.bar(left+width, nn_ave,capsize=5, color='blue',label='neural network', width=width, align='center',tick_label=range(1,10))
+#g3=plt.scatter(left,phi_max,color='r',marker='o')
+#g4=plt.scatter(left+width,nn_max,color='b',marker='x')
 plt.legend(handles=[g1,g2],loc='best',shadow=True,fontsize=10)
 plt.xlabel('user id',fontsize=fsize)
+plt.ylim(0,0.5)
 plt.ylabel('average of correlation',fontsize=fsize)
-plt.ylim(0,0.45)
+#plt.ylim(0,0.45)
 
-plt.savefig('vsnn.eps')
+plt.savefig('vsnn_plu.eps')
 #plt.show()
 
 #for i in range(len(set_list)):

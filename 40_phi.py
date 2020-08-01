@@ -15,6 +15,7 @@ for name_num in range(9):
 
       mood_test = np.loadtxt(dir_name + "/mood_test" + i_csv ,delimiter=',')
       mood_est = np.loadtxt(dir_name + "/TESTestimated_phi" + i_csv, delimiter=',')
+      number = np.loadtxt(dir_name + "/selected_num_test" + i_csv, delimiter=',')
 
       #mood_est = np.hstack((mood_esta,mood_estb))
 

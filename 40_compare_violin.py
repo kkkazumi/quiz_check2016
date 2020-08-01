@@ -33,8 +33,8 @@ for name_num in range(hito_num):
 
     #abs
     ave_index = name_num*test_len
-    nn_ave[set_num/5-1,ave_index:ave_index+test_len]= np.where(nn_corr>0,nn_corr,None)
-    phi_ave[set_num/5-1,ave_index:ave_index+test_len]= np.where(phi_corr>0,phi_corr,None)
+    nn_ave[set_num/5-1,ave_index:ave_index+test_len]= nn_corr#np.where(nn_corr>0,nn_corr,None)
+    phi_ave[set_num/5-1,ave_index:ave_index+test_len]= phi_corr#np.where(phi_corr>0,phi_corr,None)
     #ran_ave[set_num/5-1,ave_index:ave_index+test_len]= np.where(nn_corr>0.1,ran_corr,None)
 
     #ave_index = name_num*test_len

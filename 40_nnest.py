@@ -1,7 +1,8 @@
 import optuna
 
+
 import keras.backend as K
-from keras.models import Sequential, Model
+from keras.models import Sequential, Model, load_model
 from keras.layers import Input, Dense, Activation
 from keras.layers.advanced_activations import LeakyReLU
 import numpy as np
@@ -21,14 +22,14 @@ for name_num in (0,1,2,3,4,5,6,7,8):
     for i in range(29):#calculate the avelage value of estimated accuracy for datum in this loop
       i_csv = str(set_num) + "-" + str(i) + ".csv"
 
-      model = load_model("sincos_model.h5")
-
       #test to output
-      factor_test = np.loadtxt(dir_name + "/factor_test" + i_csv ,delimiter=',')
-      mood_test = np.loadtxt(dir_name + "/mood_test" + i_csv ,delimiter=',')
-      face_test = np.loadtxt(dir_name + "/face_test" + i_csv ,delimiter=',')
+      factor_test = np.loadtxt(dir_name + "/factor_train" + i_csv ,delimiter=',')
+      mood_test = np.loadtxt(dir_name + "/mood_train" + i_csv ,delimiter=',')
+      face_test = np.loadtxt(dir_name + "/face_train" + i_csv ,delimiter=',')
 
       m_pred = np.zeros_like(mood_test)
+
+      model = load_model(dir_name+"/nn_model"+str(set_num)+"-"+str(i)+".h5")
 
       #set data to test
       for m_t in range(len(mood_test)):
@@ -42,9 +43,8 @@ for name_num in (0,1,2,3,4,5,6,7,8):
         err_array = np.sum(err,1)
         m_est = np.argmin(abs(err_array))
         m_pred[m_t] = m_est/100.0
+        print("m_pred",m_pred)
 
       #test output
-      outname = dir_name + "/estimated_nn" + i_csv
+      outname = dir_name + "/TRAINestimated_nn" + i_csv
       np.savetxt(outname,m_pred,fmt="%.3f")
-      lossname = dir_name + "/nn_loss" + i_csv
-      np.savetxt(lossname,train.history['loss'])
