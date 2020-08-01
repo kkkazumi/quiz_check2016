@@ -64,14 +64,15 @@ for i_name in range(USR_NUM):
 
     for emo_num in range(EMO_NUM):
       face_diff[test_num,emo_num] = np.sum(abs(phi_signal[i_name,emo_num]-signal[:,emo_num]))
-    """
-    lt.plot(phi_signal[i_name,3],label="phi out")
+
+    selected_num=np.loadtxt('/home/kazumi/prog/quiz_check2016/jrm_test/'+str(i_name+1)+'/selected_num_test'+str(set_num)+'-'+str(test_num)+'.csv')
+    plt.plot(phi_signal[i_name,3],label="phi out")
     plt.plot(signal[:,3],label="signal")
     plt.ylim(0,1)
-    plt.title('usr'+str(i_name)+"-no."+str(test_num)+'('+xlabel[3]+')')
+    plt.title('usr'+str(i_name)+"-no."+str(test_num)+'('+xlabel[3]+'),'+str(int(selected_num)))
     plt.legend()
     plt.show()
-    """
+
   for emo_num in range(EMO_NUM):
     np.savetxt('/home/kazumi/prog/quiz_check2016/jrm_test/'+str(i_name+1)+'/face_diff_'+xlabel[emo_num]+'-29.csv',face_diff[:,emo_num],delimiter=",")
 
