@@ -1,39 +1,43 @@
+#python3
 import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 
-
-user_name = 0
+users = range(9)
 set_num = 29
-
 set_num_list = (25,26,27,28,29)
+factor_num = 10
 
 #factor = np.zeros((25*9,250))
-factor_vec = np.zeros((9*set_num*len(set_num_list),len(set_num_list)*10))
-f_var = np.zeros(9*set_num*len(set_num_list))
-s_var = np.zeros(9*set_num*len(set_num_list))
-est_q = np.zeros(9*set_num*len(set_num_list))
+factor_vec = np.zeros((len(users)*set_num*len(set_num_list),factor_num))
+#factor_vec = np.zeros((len(users)*set_num*len(set_num_list),len(set_num_list)*factor_num))
+f_var = np.zeros(len(users)*set_num*len(set_num_list))
+s_var = np.zeros(len(users)*set_num*len(set_num_list))
+est_q = np.zeros(len(users)*set_num*len(set_num_list))
 
-num = np.zeros(9*25*5)
+num = np.zeros(len(users)*set_num*len(set_num_list))
 
-for set_num in set_num_list:
-  _s = set_num
-  num[int(_s*25*9):int(_s*25*9)+25*9]=set_num
+for st in set_num_list:
+  _s = st-25
+  num[int(_s*set_num*len(users)):int(_s*set_num*len(users))+set_num*len(users)]=st
   #num[int(_s*25*9):int(_s*25*9)+25*9]=set_num
-  for user_name in range(9):
+  for user_name in users:
     #standard for
-    filepath_t = "./jrm_test/"+str(user_name+1)+"/phi_point-" +str(set_num) +".csv"
-    est_q[int(_s*25*9+user_name*25):int(_s*25*9+user_name*25)+25] = np.loadtxt(filepath_t,delimiter=",")
+    filepath_t = "./jrm_test/"+str(user_name+1)+"/phi_point-" +str(st) +".csv"
+    in_i = int(_s*set_num*len(users)+user_name*set_num)
+    out_i = int(_s*set_num*len(users)+user_name*set_num)+set_num
+    est_q[int(_s*set_num*len(users)+user_name*set_num):int(_s*set_num*len(users)+user_name*set_num)+set_num] = np.loadtxt(filepath_t,delimiter=",")
 
-    for test_num in range(25):
 
-      filepath_ftes = "./jrm_test/"+str(user_name+1)+"/factor_test" + str(set_num) + "-" +str(test_num) +".csv"
-      filepath_stes = "./jrm_test/"+str(user_name+1)+"/face_test" + str(set_num) + "-" +str(test_num) +".csv"
+    for test_num in range(set_num):
 
-      filepath_f = "./jrm_test/"+str(user_name+1)+"/factor_train" + str(set_num) + "-" +str(test_num) +".csv"
-      filepath_s = "./jrm_test/"+str(user_name+1)+"/face_train" + str(set_num) + "-" +str(test_num) +".csv"
-      t=int(_s*25*9+user_name*25+test_num)
+      filepath_ftes = "./jrm_test/"+str(user_name+1)+"/factor_test" + str(st) + "-" +str(test_num) +".csv"
+      filepath_stes = "./jrm_test/"+str(user_name+1)+"/face_test" + str(st) + "-" +str(test_num) +".csv"
+
+      filepath_f = "./jrm_test/"+str(user_name+1)+"/factor_train" + str(st) + "-" +str(test_num) +".csv"
+      filepath_s = "./jrm_test/"+str(user_name+1)+"/face_train" + str(st) + "-" +str(test_num) +".csv"
+      t=int(_s*set_num*len(users)+user_name*set_num+test_num)
 
       _factor = np.loadtxt(filepath_f,delimiter=",")
       _factor_tes = np.loadtxt(filepath_ftes,delimiter=",")
