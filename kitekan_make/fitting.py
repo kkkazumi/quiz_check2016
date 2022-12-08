@@ -7,7 +7,6 @@ def get_spl(x_data,y_data):
   f_sci = interpolate.interp1d(x_data,y_data,kind="cubic")
 
 USER_NUM = 9
-
 FACTOR_NUM = 10
 FACE_TYPE = 4
 
@@ -30,7 +29,7 @@ def ret_data(df):
   y_res=np.poly1d(res)(x_data_2)
   return x_data_2,y_res
 
-def show_graph(username,factor_data,signal_data,mental_data):
+def show_graph(username,factor_data,signal_data,mental_data,thr):
   for factor_type in range(FACTOR_NUM):
     for signal_type in range(FACE_TYPE):
       #for m in range(10):
@@ -41,11 +40,11 @@ def show_graph(username,factor_data,signal_data,mental_data):
       df["signal"]=y_data
       df["mental"]=mental_data
 
-      df_sml=df.query('0.4>mental>=0')
+      df_sml=df.query(str(thr[1])+'>mental>='+str(thr[0]))
       val_sml=int(df_sml["factor"].count())
-      df_mid=df.query('0.7>mental>=0.4')
+      df_mid=df.query(str(thr[2])+'>mental>='+str(thr[1]))
       val_mid=int(df_mid["factor"].count())
-      df_big=df.query('1>=mental>=0.7')
+      df_big=df.query(str(thr[3])+'>=mental>='+str(thr[2]))
       val_big=int(df_big["factor"].count())
 
       if(val_sml*val_mid*val_big>0):
@@ -68,13 +67,38 @@ def show_graph(username,factor_data,signal_data,mental_data):
       plt.clf()
 
 
-for username in range(1,USER_NUM+1):
-  factor_file = DIR_PATH+str(username)+"/factor_before.csv"
-  signal_file = DIR_PATH+str(username)+"/signal_before.csv"
-  mental_file = DIR_PATH+str(username)+"/kibun_before.csv"
+with open('mental_thr_memo.csv', 'a') as f:
+  for username in range(1,USER_NUM+1):
+    thr=[0,0.4,0.7,1]
 
-  factor_data = np.loadtxt(factor_file,delimiter="\t")
-  signal_data = np.loadtxt(signal_file,delimiter="\t")
-  mental_data = np.loadtxt(mental_file,delimiter="\t")
+    factor_file = DIR_PATH+str(username)+"/factor_before.csv"
+    signal_file = DIR_PATH+str(username)+"/signal_before.csv"
+    mental_file = DIR_PATH+str(username)+"/kibun_before.csv"
 
-  show_graph(username,factor_data,signal_data,mental_data)
+    factor_data = np.loadtxt(factor_file,delimiter="\t")
+    signal_data = np.loadtxt(signal_file,delimiter="\t")
+    mental_data = np.loadtxt(mental_file,delimiter="\t")
+    df_mental = pd.DataFrame(mental_data,columns=["mental"])
+
+    for trial in range(2):
+      plt.hist(df_mental["mental"])
+      #plt.vlines([df_mental.describe()["mental"]["mean"]], 0, 30, "blue", linestyles='dashed')
+      plt.vlines(thr[1], 0, 30, "red", linestyles='dashed')
+      plt.vlines(thr[2], 0, 30, "green", linestyles='dashed')
+      plt.show()
+      for i in range(2):
+        print("thr["+str(i+1)+"]?")
+        #if(input() is not ""):
+        #  thr[1]=input()
+        val=input()
+        if(val is not ""):
+          print("val:",val)
+          thr[i+1]=float(val)
+        else:
+          print("noval")
+      print(thr)
+
+    input()
+    #print(str(username)+":"+str(thr[1])+","+str(thr[2])+"\n", file=f)
+
+    show_graph(username,factor_data,signal_data,mental_data,thr)
