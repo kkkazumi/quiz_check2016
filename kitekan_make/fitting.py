@@ -3,7 +3,7 @@ from scipy import interpolate
 import matplotlib.pyplot as plt
 import pandas as pd
 
-print("input mode all/each")
+print("input mode all/each/set(what is it?)/check")
 mode=input()
 
 def get_spl(x_data,y_data):
@@ -17,6 +17,16 @@ DIR_PATH = "../../est_pred_pc/data/"
 face_type_list=["happy","surprised","angry","sad"]
 factor_type_list=["trial num","rate of win","rate of encourage behavior","rate of sympathetic behavior", "rate of teasing behavior","rate of un-related behavior","rate of no behavior","total point","consecutive wins","consecutive loses"]
 
+def get_data(username):
+  factor_file = DIR_PATH+str(username)+"/factor_before.csv"
+  signal_file = DIR_PATH+str(username)+"/signal_before.csv"
+  mental_file = DIR_PATH+str(username)+"/kibun_before.csv"
+  factor_data = np.loadtxt(factor_file,delimiter="\t")
+  signal_data = np.loadtxt(signal_file,delimiter="\t")
+  mental_data = np.loadtxt(mental_file,delimiter="\t")
+  df_mental = pd.DataFrame(mental_data,columns=["mental"])
+  return factor_data,signal_data,mental_data,df_mental
+
 def ret_data_all(df,factor_type,signal_type):
 
   x_data=np.array(df[factor_type_list[factor_type]])+0.0001
@@ -28,7 +38,8 @@ def ret_data_all(df,factor_type,signal_type):
   mental_2=mental_data[np.argsort(x_data)]
 
   res = np.polyfit(x_data_2,y_data_2,2)
-  y_res=np.poly1d(res)(x_data_2)
+  x=np.linspace(0,1,100)
+  y_res=np.poly1d(res)(x)
   return x_data_2,y_res
 
 
@@ -44,7 +55,8 @@ def ret_data(df):
   mental_2=mental_data[np.argsort(x_data)]
 
   res = np.polyfit(x_data_2,y_data_2,2)
-  y_res=np.poly1d(res)(x_data_2)
+  x=np.linspace(0,1,100)
+  y_res=np.poly1d(res)(x)
   return res,x_data_2,y_res
 
 def show_graph(username,factor_data,signal_data,mental_data,thr):
@@ -72,9 +84,10 @@ def show_graph(username,factor_data,signal_data,mental_data,thr):
           ret_big,x_big,y_res_big=ret_data(df_big)
           print(username,factor_type,signal_type,ret_sml,ret_mid,ret_big,file=f)
 
-          plt.plot(x_sml,y_res_sml,color='blue',label="sml",linestyle="dotted")
-          plt.plot(x_mid,y_res_mid,color='green',label="mid",linestyle="dashed")
-          plt.plot(x_big,y_res_big,color='red',label="big",linestyle="solid")
+          x=np.linspace(0,1,100)
+          plt.plot(x,y_res_sml,color='blue',label="sml",linestyle="dotted")
+          plt.plot(x,y_res_mid,color='green',label="mid",linestyle="dashed")
+          plt.plot(x,y_res_big,color='red',label="big",linestyle="solid")
         plt.scatter(x_data,y_data,c=mental_data)
         plt.legend()
 
@@ -82,9 +95,12 @@ def show_graph(username,factor_data,signal_data,mental_data,thr):
         plt.xlabel("factor data("+factor_type_list[factor_type]+")")
 
         filename="./plot/graph_u"+str(username)+"_f"+str(factor_type)+"_s"+str(signal_type)+".png"
-        #plt.savefig(filename)
+        plt.savefig(filename)
+        #plt.show()
         print("u",username,"f",factor_type,"s",signal_type)
         plt.clf()
+
+#main
 
 if(mode=="each"):
   filename='mental_thr_memo.csv'
@@ -95,14 +111,7 @@ if(mode=="each"):
     thr[1]=data[username-1,1]
     thr[2]=data[username-1,2]
 
-    factor_file = DIR_PATH+str(username)+"/factor_before.csv"
-    signal_file = DIR_PATH+str(username)+"/signal_before.csv"
-    mental_file = DIR_PATH+str(username)+"/kibun_before.csv"
-
-    factor_data = np.loadtxt(factor_file,delimiter="\t")
-    signal_data = np.loadtxt(signal_file,delimiter="\t")
-    mental_data = np.loadtxt(mental_file,delimiter="\t")
-    df_mental = pd.DataFrame(mental_data,columns=["mental"])
+    factor_data,signal_data,mental_data,df_mental = get_data(username)
 
     show_graph(username,factor_data,signal_data,mental_data,thr)
 
@@ -110,15 +119,7 @@ elif(mode=="set"):
   with open('mental_thr_memo.csv', 'a') as f:
     for username in range(1,USER_NUM+1):
       thr=[0,0.4,0.7,1]
-
-      factor_file = DIR_PATH+str(username)+"/factor_before.csv"
-      signal_file = DIR_PATH+str(username)+"/signal_before.csv"
-      mental_file = DIR_PATH+str(username)+"/kibun_before.csv"
-
-      factor_data = np.loadtxt(factor_file,delimiter="\t")
-      signal_data = np.loadtxt(signal_file,delimiter="\t")
-      mental_data = np.loadtxt(mental_file,delimiter="\t")
-      df_mental = pd.DataFrame(mental_data,columns=["mental"])
+      factor_data,signal_data,mental_data,df_mental = get_data(username)
 
       for trial in range(2):
         plt.hist(df_mental["mental"])
@@ -142,30 +143,28 @@ elif(mode=="set"):
       #print(str(username)+":"+str(thr[1])+","+str(thr[2])+"\n", file=f)
 
       show_graph(username,factor_data,signal_data,mental_data,thr)
+
+elif(mode=="check"):
+  for username in range(1,USER_NUM+1):
+    factor_data,signal_data,mental_data,df_mental = get_data(username)
+    
+
 else:
 
   filename='mental_thr_memo.csv'
   data=np.loadtxt(filename,delimiter=",")
-
-  #for factor_type in range(FACTOR_NUM):
-  #  for signal_type in range(FACE_TYPE):
 
   for username in range(1,USER_NUM+1):
     thr=[0,0.4,0.7,1]
     thr[1]=data[username-1,1]
     thr[2]=data[username-1,2]
 
-    factor_file = DIR_PATH+str(username)+"/factor_before.csv"
-    signal_file = DIR_PATH+str(username)+"/signal_before.csv"
-    mental_file = DIR_PATH+str(username)+"/kibun_before.csv"
-
-    factor_data = np.loadtxt(factor_file,delimiter="\t")
-    signal_data = np.loadtxt(signal_file,delimiter="\t")
-    mental_data = np.loadtxt(mental_file,delimiter="\t")
+    factor_data,signal_data,mental_data,_= get_data(username)
 
     df_f=pd.DataFrame(factor_data,columns=factor_type_list)
     df_s=pd.DataFrame(signal_data,columns=face_type_list)
     df=pd.concat([df_f,df_s],axis=1)
+
     df["mental"]=mental_data
 
     if(username==1):
@@ -190,9 +189,10 @@ else:
       print("x_sml",x_sml)
       print("y_res_sml",y_res_sml)
 
-      plt.plot(x_sml,y_res_sml,color='blue',label="sml",linestyle="dotted")
-      plt.plot(x_mid,y_res_mid,color='green',label="mid",linestyle="dashed")
-      plt.plot(x_big,y_res_big,color='red',label="big",linestyle="solid")
+      x=np.linspace(0,1,100)
+      plt.plot(x,y_res_sml,color='blue',label="sml",linestyle="dotted")
+      plt.plot(x,y_res_mid,color='green',label="mid",linestyle="dashed")
+      plt.plot(x,y_res_big,color='red',label="big",linestyle="solid")
 
       x_data_sml=df_sml[factor_type_list[factor_type]]
       y_data_sml=df_sml[face_type_list[signal_type]]
