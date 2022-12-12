@@ -14,6 +14,7 @@ height,width=test_im.shape[:2]
 #im=np.tile(_im,9)
 #print(im.shape)
 #input()
+print("note that save mode doesnt work, and make total/ dir")
 print("input show graph or save graph: save/show")
 flg=input()
 
